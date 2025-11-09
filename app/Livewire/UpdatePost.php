@@ -29,9 +29,10 @@ class UpdatePost extends Component
 
             $this->post = Post::findOrFail($postId);
 
-            if ($this->post->user_id !== Auth::id()) {
+            if ($this->post->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
                 session()->flash('error', 'Unauthorized to edit this post.');
             }
+
 
             $this->postId = $postId;
             $this->title = $this->post->title;

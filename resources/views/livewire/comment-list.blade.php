@@ -14,7 +14,7 @@
                     </div>
 
 
-                    @if (auth()->id() === $comment->user_id)
+                    @if (auth()->id() === $comment->user_id || Auth::user()->role === 'admin')
                         <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition">
 
 

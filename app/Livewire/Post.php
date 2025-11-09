@@ -6,7 +6,6 @@ use Livewire\Component;
 use App\Models\Post as PostModel;
 use Illuminate\Support\Facades\Auth;
 use App\Traits\LivewireActivityLogger;
-use Illuminate\Support\Facades\Crypt;
 
 class Post extends Component
 {
@@ -25,10 +24,11 @@ class Post extends Component
         $post = PostModel::find($postId);
 
         // Authorization: only the creator can delete their post (except admin)
-        if (!$post || Auth::id() !== $post->user_id || Auth::user()->role === 'admin') {
+        if (!$post || (Auth::id() !== $post->user_id && Auth::user()->role !== 'admin')) {
             session()->flash('error', 'You are not authorized to delete this post.');
             return $this->redirectBasedOnRole();
         }
+
 
         // Soft delete
         $post->delete();

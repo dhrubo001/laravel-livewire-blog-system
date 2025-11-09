@@ -12,7 +12,16 @@
         @auth
             @if (Auth::id() === $post->user_id || Auth::user()->role === 'admin')
                 <div class="flex space-x-3 mb-6">
-                    <a href="{{ route('getPostUpdate', ['slug' => $post->slug]) }}"
+                    @php
+                        $role = Auth::user()->role;
+                        $routeName = match ($role) {
+                            'admin' => 'admin.getPostUpdate',
+                            'user' => 'getPostUpdate',
+                            default => 'getPostUpdate',
+                        };
+                    @endphp
+
+                    <a href="{{ route($routeName, ['slug' => $post->slug]) }}"
                         class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold shadow transition">
                         ✏️ Edit
                     </a>

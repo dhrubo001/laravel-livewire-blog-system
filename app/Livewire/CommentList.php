@@ -37,7 +37,7 @@ class CommentList extends Component
     {
         $comment = Comment::find($id);
 
-        if ($comment && $comment->user_id === Auth::id()) {
+        if (($comment && $comment->user_id === Auth::id() || Auth::user()->role === 'admin')) {
             $comment->delete();
             $this->refreshComments();
             session()->flash('success', 'Comment deleted successfully.');
