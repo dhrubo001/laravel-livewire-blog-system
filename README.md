@@ -1,64 +1,187 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+📰 Laravel Livewire Blog System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A modern blog management system built using Laravel 11 and Livewire 3, providing a smooth, dynamic user experience without needing a full page reload. This project demonstrates role-based access, activity logging, soft deletes, encrypted route parameters, and real-time interactivity.
 
-## About Laravel
+🚀 Features 🧑‍💻 Authentication System
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Custom login and registration pages built using Tailwind CSS.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Authentication powered by Custom authentication code logic (but fully customized).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Flash messages for login/logout actions.
 
-## Learning Laravel
+👥 Role-Based Access
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+User Roles:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Admin: Full control over all posts and users.
 
-## Laravel Sponsors
+User: Can create, update, read, and soft-delete their own posts.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Custom middleware (RoleMiddleware) ensures that:
 
-### Premium Partners
+/user/\* routes are only accessible to users with role user.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+/admin/\* routes are only accessible to users with role admin.
 
-## Contributing
+📝 Blog Management
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Create, Read, Update, and Delete (Soft Delete) blog posts.
 
-## Code of Conduct
+Each post includes:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Title
 
-## Security Vulnerabilities
+Content
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Author (linked to user)
 
-## License
+Posts are soft deleted using Eloquent’s SoftDeletes trait.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# laravel-livewire-blog-system
-Laravel livewire blog system
->>>>>>> 76d43d184fd53ba5bc4feb05a410a9c2086d9570
+Secure delete actions using Laravel Encryption for post IDs.
+
+💬 Comments (if enabled)
+
+Each post supports multiple comments.
+
+Uses withCount('comments') for efficient comment count display.
+
+⚙️ Livewire Components Post Component
+
+Displays a single post.
+
+Handles delete actions with confirmation.
+
+Logs activities such as post deletion.
+
+UpdatePost Component
+
+Enables users to update their posts.
+
+Includes real-time validation rules.
+
+Logs activities for updates.
+
+Flash messages on success/error.
+
+DashboardStats Component
+
+Shows quick statistics:
+
+Total users (role: user)
+
+Total posts
+
+Total comments
+
+🧾 Activity Logging
+
+Trait: LivewireActivityLogger
+
+Automatically logs important actions like:
+
+Post created
+
+Post updated
+
+Post deleted
+
+Stored in activity_logs table (or log file depending on configuration).
+
+🔐 Encryption
+
+Post IDs are encrypted in Livewire buttons and URLs to enhance security.
+
+Example:
+
+wire:click="deletePost('{{ encrypt($post->id) }}')"
+
+🛡️ Middleware RoleMiddleware
+
+Custom middleware to verify authenticated users’ roles.
+
+if (Auth::check() && Auth::user()->role === $role) { return $next($request); } abort(403);
+
+LogActivity Middleware
+
+Logs each user’s action (visiting routes, performing CRUD operations).
+
+🧩 Service Provider
+
+A custom service provider is included to encapsulate business logic like:
+
+Activity logging
+
+Role-based access logic
+
+Event handling for post creation/deletion
+
+Registered in config/app.php:
+
+App\Providers\BlogServiceProvider::class,
+
+🧠 Route Organization Public (Guest) /login /register
+
+Authenticated /logout
+
+User Routes (prefix: user) /user/dashboard /user/post/create /user/post/{slug} /user/post/update/{slug}
+
+Admin Routes (prefix: admin) /admin/dashboard /admin/post/create /admin/post/{slug} /admin/post/update/{slug}
+
+Each route group uses:
+
+auth
+
+role:user or role:admin
+
+log.activity
+
+📦 Tech Stack
+
+Backend: Laravel 11
+
+Frontend: Tailwind CSS
+
+Interactivity: Livewire 3
+
+Database: MySQL
+
+Auth: Laravel Auth Guards
+
+Logs: Laravel Logging System
+
+Encryption: Laravel Crypt
+
+🧰 Setup Instructions
+
+Clone the Repository
+
+git clone https://github.com/dhrubo001/laravel-livewire-blog-system.git cd laravel-livewire-blog-system
+
+Install Dependencies
+
+composer install npm install && npm run dev
+
+Environment Setup
+
+cp .env.example .env php artisan key:generate
+
+Database Setup
+
+Create a new MySQL database.
+
+Update .env with credentials.
+
+Run migrations:
+
+php artisan migrate
+
+Run the Application
+
+php artisan serve
+
+Login
+
+Register a new user.
+
+Change the role field in users table manually to 'admin' for admin access.
