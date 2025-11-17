@@ -25,7 +25,6 @@ Route::prefix('user')->middleware(['auth', 'role:user', 'log.activity'])->group(
     Route::get('/post/create', [PostController::class, 'getPostCreate'])->name('getPostCreate');
     Route::get('/post/{slug}', [PostController::class, 'getPostRead'])->name('getPostRead');
     Route::get('/post/update/{slug}', [PostController::class, 'getPostUpdate'])->name('getPostUpdate');
-    Route::get('/logout', [LoginController::class, 'postLogout'])->name('postLogout');
 });
 
 Route::prefix('admin')->middleware(['auth', 'role:admin', 'log.activity'])->group(function () {
